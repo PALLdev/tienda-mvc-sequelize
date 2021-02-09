@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ docTitle }}</title>
+    <link rel="icon" href="data:,"> <!-- quitar el favicon.ico request -->
+    <link rel="stylesheet" href="/css/main.css">
+    {{#if productCSS}}
+    <link rel="stylesheet" href="/css/product.css">
+    {{/if}}
+    {{#if formCSS}}
+    <link rel="stylesheet" href="/css/form.css">
+    {{/if}}
+</head>
+
+<body>
+    {{!-- main header --}}
+    <header class="main-header">
+        <section class="main-header__container">
+            <div class="main-header__logo">
+                <a href="#">PERROSHOP</a>
+            </div>
+
+            <nav class="main-header__nav">
+                <a href="/" class="{{#if activeShop}}active{{/if}}">Tienda</a>
+                <a href="/admin/add-product" class="{{#if activeAddProduct}}active{{/if}}">Agregar producto</a>
+            </nav>
+        </section>
+    </header>
+    {{!-- main section --}}
+    {{{ body }}}
+</body>
+
+</html>

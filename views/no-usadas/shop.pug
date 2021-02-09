@@ -1,0 +1,28 @@
+extends layouts/main-layout
+
+block styles
+    link(rel="stylesheet", href="/css/product.css")
+
+block navigation
+    nav.main-header__nav
+        a.active(href="/") Tienda
+        a(href="/admin/add-product") Agregar producto
+
+block content
+    main
+        if prods.length > 0
+            h2.align-center Productos en tienda
+            div.grid
+                each product in prods
+                    article.card.product-item
+                        header.card__header
+                            h1.product__title= product.titulo
+                        div.card__image
+                            img(src="https://images-na.ssl-images-amazon.com/images/I/51oFb9NbasL._SX312_BO1,204,203,200_.jpg", alt=product.titulo)
+                        div.card__content
+                            h2.product__price= product.precio
+                            p.product__description= product.descripcion
+                        div.card__actions
+                            button.btn Añadir al carro
+        else
+            h2.align-center No hay productos en la tienda
