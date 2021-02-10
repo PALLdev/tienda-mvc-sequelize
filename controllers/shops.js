@@ -70,6 +70,14 @@ exports.postAddToCart = (req, res, next) => {
   res.redirect("/cart");
 };
 
+exports.postDeleteCartItem = (req, res, next) => {
+  const prodId = req.body.idCartItem;
+  Product.findById(prodId, (product) => {
+    Cart.deleteProduct(prodId, product.precio);
+    res.redirect("/cart");
+  });
+};
+
 exports.getOrdersPage = (req, res, next) => {
   res.render("customers/orders", {
     docTitle: "Pagina de tus pedidos",

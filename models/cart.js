@@ -49,6 +49,10 @@ module.exports = class Cart {
       const updatedCart = { ...cart };
       // find how many times we have the product on the cart to change total
       const product = updatedCart.products.find((prod) => prod.id === id);
+      // check if a given product is part of the cart
+      if (!product) {
+        return;
+      }
       const prodQuantity = product.quantity;
       // creo nueva lista sin el prod que quiero eliminar
       updatedCart.products = updatedCart.products.filter(

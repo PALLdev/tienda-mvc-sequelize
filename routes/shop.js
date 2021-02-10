@@ -7,6 +7,8 @@ expRouter.get("/cart", shopsController.getCartPage);
 
 expRouter.post("/cart", shopsController.postAddToCart);
 
+expRouter.post("/cart-delete-item", shopsController.postDeleteCartItem);
+
 expRouter.get("/orders", shopsController.getOrdersPage);
 
 expRouter.get("/checkout", shopsController.getCheckoutPage);
