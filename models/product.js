@@ -1,30 +1,41 @@
-const db = require("../util/database");
-const Cart = require("./cart");
+const { Sequelize, DataTypes, Model } = require("sequelize");
 
-module.exports = class Product {
-  constructor(id, titulo, urlImagen, descripcion, precio) {
-    this.id = id;
-    this.titulo = titulo;
-    this.urlImagen = urlImagen;
-    this.descripcion = descripcion;
-    this.precio = precio;
+const sequelize = require("../util/database");
+
+class Product extends Model {}
+
+Product.init(
+  {
+    // Model attributes are defined here
+    id: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      autoIncrement: true,
+      unique: true,
+      allowNull: false,
+      primaryKey: true,
+    },
+    titulo: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
+    },
+    precio: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: false,
+    },
+    descripcion: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    urlImagen: {
+      type: DataTypes.STRING(500),
+      allowNull: false,
+    },
+  },
+  {
+    // Other model options go here
+    sequelize, // We need to pass the connection instance
+    modelName: "productos", // We need to choose the model name
   }
+);
 
-  save() {
-    return db.execute(
-      "INSERT INTO productos (titulo, precio, descripcion, urlImagen) VALUES (?, ?, ?, ?)",
-      [this.titulo, this.precio, this.descripcion, this.urlImagen]
-    );
-  }
-
-  static deleteById(id) {}
-
-  static fetchAll() {
-    return db.execute("SELECT * FROM productos");
-  }
-
-  static findById(id) {
-    // retorna un array con un solo producto y sus propiedades
-    return db.execute("SELECT * FROM productos WHERE productos.id = ?", [id]);
-  }
-};
+module.exports = Product;
