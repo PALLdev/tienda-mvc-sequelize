@@ -26,8 +26,14 @@ exports.postAddProduct = (req, res, next) => {
   const description = req.body.descripcion;
 
   const product = new Product(null, title, imgURL, description, price);
-  product.save();
-  res.redirect("/");
+  product
+    .save()
+    .then(() => {
+      res.redirect("/");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 exports.getEditProductPage = (req, res, next) => {

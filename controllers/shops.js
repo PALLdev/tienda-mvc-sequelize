@@ -3,7 +3,7 @@ const Cart = require("../models/cart");
 
 exports.getProductsPage = (req, res, next) => {
   Product.fetchAll()
-    .then(([rows, fieldData]) => {
+    .then(([rows]) => {
       res.render("customers/products-list", {
         prods: rows,
         docTitle: "Mis Productos",
@@ -30,7 +30,7 @@ exports.getDetailsPage = (req, res, next) => {
 exports.getHomePage = (req, res, next) => {
   Product.fetchAll()
     // rows are all my entries in the productos table
-    .then(([rows, fieldData]) => {
+    .then(([rows]) => {
       res.render("customers/index", {
         docTitle: "Home Page Tienda Online",
         path: "/",
