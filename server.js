@@ -4,8 +4,7 @@ const parser = require("body-parser");
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const errorsController = require("./controllers/errors");
-
-// const expressHDBS = require('express-handlebars');
+const sequelize = require("./util/database");
 
 const app = express();
 const port = 3000;
@@ -30,6 +29,13 @@ app.use(shopRoutes);
 
 app.use(errorsController.error404Page);
 
-app.listen(port, () => {
-  console.log(`Server running on localhost:${port}`);
-});
+sequelize
+  .sync()
+  .then(() => {
+    app.listen(port, () => {
+      console.log(`Server running on localhost:${port}`);
+    });
+  })
+  .catch((err) => {
+    console.log(err);
+  });
