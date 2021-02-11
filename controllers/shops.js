@@ -2,14 +2,17 @@ const Product = require("../models/product");
 const Cart = require("../models/cart");
 
 exports.getProductsPage = (req, res, next) => {
-  Product.fetchAll((allProducts) => {
-    // esto se ejecuta cuando fetchAll its done (cuando se termine de ejecutar. ASYNC)
-    res.render("customers/products-list", {
-      prods: allProducts,
-      docTitle: "Mis Productos",
-      path: "/products",
+  Product.fetchAll()
+    .then(([rows, fieldData]) => {
+      res.render("customers/products-list", {
+        prods: rows,
+        docTitle: "Mis Productos",
+        path: "/products",
+      });
+    })
+    .catch((err) => {
+      console.log(err);
     });
-  });
 };
 
 exports.getDetailsPage = (req, res, next) => {
@@ -25,13 +28,18 @@ exports.getDetailsPage = (req, res, next) => {
 };
 
 exports.getHomePage = (req, res, next) => {
-  Product.fetchAll((allProducts) => {
-    res.render("customers/index", {
-      docTitle: "Home Page Tienda Online",
-      path: "/",
-      prods: allProducts,
+  Product.fetchAll()
+    // rows are all my entries in the productos table
+    .then(([rows, fieldData]) => {
+      res.render("customers/index", {
+        docTitle: "Home Page Tienda Online",
+        path: "/",
+        prods: rows,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
     });
-  });
 };
 
 exports.getCartPage = (req, res, next) => {
