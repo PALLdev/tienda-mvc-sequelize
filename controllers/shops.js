@@ -18,13 +18,16 @@ exports.getProductsPage = (req, res, next) => {
 exports.getDetailsPage = (req, res, next) => {
   // obtengo el id del producto desde la ruta
   const prodID = req.params.productId;
-  Product.findById(prodID, (product) => {
-    res.render("customers/product-details", {
-      product: product,
-      docTitle: `Detalles ${product.titulo}`,
-      path: "/products",
-    });
-  });
+  Product.findById(prodID)
+    .then(([product]) => {
+      res.render("customers/product-details", {
+        // when destructuring, then returns an array, so I get its first element that contains my single product data
+        product: product[0],
+        docTitle: `Detalles ${product[0].titulo}`,
+        path: "/products",
+      });
+    })
+    .catch((err) => console.log(err));
 };
 
 exports.getHomePage = (req, res, next) => {

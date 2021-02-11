@@ -23,5 +23,8 @@ module.exports = class Product {
     return db.execute("SELECT * FROM productos");
   }
 
-  static findById(id) {}
+  static findById(id) {
+    // retorna un array con un solo producto y sus propiedades
+    return db.execute("SELECT * FROM productos WHERE productos.id = ?", [id]);
+  }
 };
