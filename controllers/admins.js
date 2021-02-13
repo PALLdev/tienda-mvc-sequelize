@@ -28,13 +28,15 @@ exports.postAddProduct = (req, res, next) => {
   const imgURL = req.body.urlImagen;
   const price = req.body.precio;
   const description = req.body.descripcion;
-
-  Product.create({
-    titulo: title,
-    precio: price,
-    descripcion: description,
-    urlImagen: imgURL,
-  })
+  // user es un sequelize object con metodos especiales debido a la asociacion
+  // product belongs to user / user hasMany product
+  req.user
+    .createProducto({
+      titulo: title,
+      precio: price,
+      descripcion: description,
+      urlImagen: imgURL,
+    })
     .then(() => {
       console.log("Producto agregado a la BD!!");
       res.redirect("/admin/products");

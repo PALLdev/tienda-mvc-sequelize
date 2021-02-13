@@ -43,23 +43,24 @@ app.use(shopRoutes);
 
 app.use(errorsController.error404Page);
 
-User.hasMany(Product);
+User.hasMany(Product, { as: "Producto" });
 Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" }); //user created products
 
 sequelize
-  // .sync({ force: true })
   .sync()
+  //.sync({force: true})
   .then(() => {
     // creando user manualmente
     return User.findByPk(1)
       .then((user) => {
         if (!user) {
           return User.create({ nombre: "admin", email: "admin@test.com" });
+        } else {
+          return user;
         }
-        return user;
       })
       .then((result) => {
-        console.log(result);
+        // console.log(result);
         app.listen(port, () => {
           console.log(`Server running on localhost:${port}`);
         });
