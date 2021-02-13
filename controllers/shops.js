@@ -2,10 +2,10 @@ const Product = require("../models/product");
 const Cart = require("../models/cart");
 
 exports.getProductsPage = (req, res, next) => {
-  Product.fetchAll()
-    .then(([rows]) => {
+  Product.findAll()
+    .then((products) => {
       res.render("customers/products-list", {
-        prods: rows,
+        prods: products,
         docTitle: "Mis Productos",
         path: "/products",
       });
@@ -18,26 +18,27 @@ exports.getProductsPage = (req, res, next) => {
 exports.getDetailsPage = (req, res, next) => {
   // obtengo el id del producto desde la ruta
   const prodID = req.params.productId;
-  Product.findById(prodID)
-    .then(([product]) => {
+  Product.findByPk(prodID)
+    .then((product) => {
       res.render("customers/product-details", {
         // when destructuring, then returns an array, so I get its first element that contains my single product data
-        product: product[0],
-        docTitle: `Detalles ${product[0].titulo}`,
+        product: product,
+        docTitle: `Detalles ${product.titulo}`,
         path: "/products",
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 exports.getHomePage = (req, res, next) => {
-  Product.fetchAll()
-    // rows are all my entries in the productos table
-    .then(([rows]) => {
+  Product.findAll()
+    .then((products) => {
       res.render("customers/index", {
         docTitle: "Home Page Tienda Online",
         path: "/",
-        prods: rows,
+        prods: products,
       });
     })
     .catch((err) => {
