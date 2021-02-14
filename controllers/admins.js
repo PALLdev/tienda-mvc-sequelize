@@ -1,7 +1,9 @@
 const Product = require("../models/product");
 
 exports.getAdminProductsPage = (req, res, next) => {
-  Product.findAll()
+  // Product.findAll()
+  req.user
+    .getProducto()
     .then((products) => {
       res.render("admin/products", {
         docTitle: "Administrar productos",
@@ -55,8 +57,11 @@ exports.getEditProductPage = (req, res, next) => {
 
   const prodId = req.params.productId;
 
-  Product.findByPk(prodId)
-    .then((product) => {
+  req.user
+    .getProducto({ where: { id: prodId } })
+    // Product.findByPk(prodId)
+    .then((products) => {
+      const product = products[0];
       if (!product) {
         // si no encuentro el producto redirecciono, aunque deberia mostrar un mensaje de error
         return res.redirect("/");
