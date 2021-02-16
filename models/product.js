@@ -8,7 +8,7 @@ Product.init(
   {
     // Model attributes are defined here
     id: {
-      type: DataTypes.INTEGER.UNSIGNED,
+      type: DataTypes.INTEGER,
       autoIncrement: true,
       unique: true,
       allowNull: false,
@@ -19,7 +19,7 @@ Product.init(
       allowNull: false,
     },
     precio: {
-      type: DataTypes.INTEGER.UNSIGNED,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     descripcion: {

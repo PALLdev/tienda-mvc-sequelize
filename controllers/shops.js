@@ -1,5 +1,4 @@
 const Product = require("../models/product");
-const Cart = require("../models/cart");
 
 exports.getProductsPage = (req, res, next) => {
   Product.findAll()
@@ -47,47 +46,91 @@ exports.getHomePage = (req, res, next) => {
 };
 
 exports.getCartPage = (req, res, next) => {
-  Cart.getCart((cart) => {
-    Product.fetchAll((products) => {
-      const cartProds = [];
-      // filter the products that are in the cart
-      // si el prod que estoy buscando es parte del cart, lo agrego a mi nueva lista de prods
-      // si no tenemos prods en el cart, se mandara un empty array
-      for (product of products) {
-        const cartProductData = cart.products.find(
-          (prod) => prod.id === product.id
-        );
-        if (cartProductData) {
-          cartProds.push({
-            productData: product,
-            quantity: cartProductData.quantity,
+  // console.log(req.user.cart);
+  req.user
+    .getCarro()
+    .then((cart) => {
+      // console.log(cart);
+      return cart
+        .getProductos()
+        .then((cartProds) => {
+          // console.log(prods);
+          res.render("customers/cart", {
+            docTitle: "Pagina del carro",
+            path: "/cart",
+            products: cartProds,
           });
-        }
-      }
-      res.render("customers/cart", {
-        docTitle: "Pagina del carro",
-        path: "/cart",
-        products: cartProds,
-      });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    })
+    .catch((err) => {
+      console.log(err);
     });
-  });
 };
 
 exports.postAddToCart = (req, res, next) => {
   const prodId = req.body.idProducto;
-  Product.findById(prodId, (product) => {
-    Cart.addProduct(prodId, product.precio);
-  });
-
-  res.redirect("/cart");
+  let fetchedCart;
+  let newQuantity = 1;
+  req.user
+    .getCarro()
+    .then((cart) => {
+      fetchedCart = cart;
+      // ver si el prod ya esta en el cart
+      return cart.getProductos({
+        where: {
+          id: prodId,
+        },
+      });
+    })
+    .then((products) => {
+      let product;
+      if (products.length > 0) {
+        product = products[0];
+      }
+      if (product) {
+        // si esta en el carro aumento cantidad
+        const oldQuantity = product.ItemsCarro.cantidad;
+        newQuantity = oldQuantity + 1;
+        return product;
+      }
+      // si no esta en el carro lo agrego
+      return Product.findByPk(prodId);
+    })
+    .then((product) => {
+      return fetchedCart.addProducto(product, {
+        through: { cantidad: newQuantity },
+      });
+    })
+    .then(() => {
+      res.redirect("/cart");
+    })
+    .catch((err) => console.log(err));
 };
 
 exports.postDeleteCartItem = (req, res, next) => {
   const prodId = req.body.idCartItem;
-  Product.findById(prodId, (product) => {
-    Cart.deleteProduct(prodId, product.precio);
-    res.redirect("/cart");
-  });
+  req.user
+    .getCarro()
+    .then((cart) => {
+      return cart.getProductos({
+        where: {
+          id: prodId,
+        },
+      });
+    })
+    .then((products) => {
+      const product = products[0];
+      return product.ItemsCarro.destroy();
+    })
+    .then(() => {
+      res.redirect("/cart");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 exports.getOrdersPage = (req, res, next) => {
