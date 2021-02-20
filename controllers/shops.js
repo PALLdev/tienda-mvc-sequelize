@@ -140,6 +140,40 @@ exports.getOrdersPage = (req, res, next) => {
   });
 };
 
+exports.postAddOrder = (req, res, next) => {
+  let fetchedCart;
+  req.user
+    .getCarro()
+    .then((cart) => {
+      fetchedCart = cart;
+      return cart.getProductos();
+    })
+    .then((products) => {
+      return req.user
+        .createPedido()
+        .then((order) => {
+          return order.addProductos(
+            products.map((product) => {
+              product.itemsPedido = { cantidad: product.ItemsCarro.cantidad };
+              return product;
+            })
+          );
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    })
+    .then((result) => {
+      return fetchedCart.setProductos(null);
+    })
+    .then((result) => {
+      res.redirect("/orders");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
 exports.getCheckoutPage = (req, res, next) => {
   res.render("customers/checkout", {
     docTitle: "Pagina de checkout",

@@ -58,6 +58,7 @@
                                 <% }) %>
                         </table>
                 </div>
+
                 <div class="total-price">
                     <table>
                         <tr>
@@ -75,6 +76,11 @@
                     </table>
                 </div>
 
+                <!-- Checkout button -->
+                <form action="/add-order" method="POST">
+                    <button type="submit" class="btn">Pedir ya!!</button>
+                    <input type="hidden" name="idPedido" value="">
+                </form>
 
                 <% } else { %>
                     <h2 class="align-center">Aún no tienes productos en tu carro.</h2>
