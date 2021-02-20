@@ -134,10 +134,18 @@ exports.postDeleteCartItem = (req, res, next) => {
 };
 
 exports.getOrdersPage = (req, res, next) => {
-  res.render("customers/orders", {
-    docTitle: "Pagina de tus pedidos",
-    path: "/orders",
-  });
+  req.user
+    .getPedidos({ include: ["productos"] }) // eager loading para pasar los productos del pedido a mis orders(this works because of the relation between orders and products)
+    .then((orders) => {
+      res.render("customers/orders", {
+        docTitle: "Pagina de tus pedidos",
+        path: "/orders",
+        orders: orders,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 exports.postAddOrder = (req, res, next) => {
